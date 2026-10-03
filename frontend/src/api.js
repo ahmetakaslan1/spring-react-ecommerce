@@ -69,6 +69,10 @@ export const getCoupons = () => get('/coupons')
 export const getActiveCoupons = () => get('/coupons/active', false)
 export const validateCoupon = (code, cartTotal) => get(`/coupons/validate/${code}${cartTotal ? '?cartTotal=' + cartTotal : ''}`)
 
+// =================== SETTINGS ===================
+export const getSettings = () => get('/settings')
+export const updatePaymentSetting = (strategy) => post('/settings/update-payment', { strategy })
+
 // =================== HTTP HELPERS ===================
 function getToken() {
   return localStorage.getItem('token')

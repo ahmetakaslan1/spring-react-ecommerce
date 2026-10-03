@@ -21,12 +21,14 @@ public class DataSeeder implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final com.example.lesson10.repository.CouponRepository couponRepository;
+    private final com.example.lesson10.repository.SystemSettingRepository systemSettingRepository;
 
-    public DataSeeder(RoleRepository roleRepository, ProductRepository productRepository, CategoryRepository categoryRepository, com.example.lesson10.repository.CouponRepository couponRepository) {
+    public DataSeeder(RoleRepository roleRepository, ProductRepository productRepository, CategoryRepository categoryRepository, com.example.lesson10.repository.CouponRepository couponRepository, com.example.lesson10.repository.SystemSettingRepository systemSettingRepository) {
         this.roleRepository = roleRepository;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.couponRepository = couponRepository;
+        this.systemSettingRepository = systemSettingRepository;
     }
 
     @Override
@@ -89,6 +91,13 @@ public class DataSeeder implements CommandLineRunner {
             defaultCoupon.setMinimumCartAmount(BigDecimal.valueOf(500));
             couponRepository.save(defaultCoupon);
             System.out.println("Varsayılan indirim kuponu (HOSGELDIN10) oluşturuldu.");
+        }
+
+        // 5. Sistem Ayarlarını Yükleme
+        if (systemSettingRepository.findById("ACTIVE_PAYMENT_STRATEGY").isEmpty()) {
+            com.example.lesson10.model.SystemSetting paymentSetting = new com.example.lesson10.model.SystemSetting("ACTIVE_PAYMENT_STRATEGY", "iyzicoPaymentStrategy");
+            systemSettingRepository.save(paymentSetting);
+            System.out.println("Varsayılan ödeme sistemi ayarı yüklendi: iyzicoPaymentStrategy");
         }
     }
     

@@ -27,6 +27,8 @@ export default function AdminPage() {
   const [shippingModal, setShippingModal] = useState({ isOpen: false, orderId: null, company: '', trackingNumber: '' })
   const [couponForm, setCouponForm] = useState({ code: '', discountPercentage: 10, usageLimit: 100, minimumCartAmount: 0 })
   const [coupons, setCoupons] = useState([])
+  
+  const [paymentSetting, setPaymentSetting] = useState('iyzicoPaymentStrategy')
 
   useEffect(() => {
     if (isAdmin) {
@@ -36,12 +38,13 @@ export default function AdminPage() {
 
   const loadDashboard = async () => {
     try {
-      const [cats, prods, usrs, ords, coups] = await Promise.all([
+      const [cats, prods, usrs, ords, coups, sets] = await Promise.all([
         api.getCategories().catch(() => []),
         api.getProducts(0, 1000).catch(() => ({ content: [] })),
         api.getAllUsers().catch(() => []),
         api.getAllOrders().catch(() => []),
-        api.getCoupons().catch(() => [])
+        api.getCoupons().catch(() => []),
+        api.getSettings().catch(() => [])
       ])
       
       setCategories(cats)
@@ -49,6 +52,11 @@ export default function AdminPage() {
       setUsers(usrs)
       setOrders(ords)
       setCoupons(coups)
+      
+      const paymentSettingItem = sets.find(s => s.settingKey === 'ACTIVE_PAYMENT_STRATEGY')
+      if (paymentSettingItem) {
+        setPaymentSetting(paymentSettingItem.settingValue)
+      }
       
       setStats({
         products: (prods.content || []).length,
@@ -194,6 +202,15 @@ export default function AdminPage() {
     } catch (err) { toast.error(err.message) }
   }
 
+  // --- Settings Actions ---
+  const handleSavePaymentSetting = async (e) => {
+    e.preventDefault()
+    try {
+      await api.updatePaymentSetting(paymentSetting)
+      toast.success('Ödeme altyapısı başarıyla güncellendi!')
+    } catch (err) { toast.error(err.message) }
+  }
+
   if (!isAdmin) {
     return (
       <div className="page">
@@ -232,6 +249,9 @@ export default function AdminPage() {
             </li>
             <li className={activeTab === 'coupons' ? 'active' : ''} onClick={() => setActiveTab('coupons')}>
               <i className="fas fa-ticket-alt"></i> Kuponlar
+            </li>
+            <li className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
+              <i className="fas fa-cog"></i> Ayarlar
             </li>
           </ul>
         </div>
@@ -586,6 +606,31 @@ export default function AdminPage() {
                       )}
                     </tbody>
                   </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Settings */}
+          {activeTab === 'settings' && (
+            <div className="admin-section fade-in">
+              <h2>Sistem Ayarları</h2>
+              <div className="admin-grid" style={{ gridTemplateColumns: '1fr' }}>
+                <div className="glass-panel" style={{ maxWidth: '600px' }}>
+                  <h3>Ödeme Altyapısı Tercihi</h3>
+                  <p className="text-muted" style={{ marginBottom: '15px' }}>
+                    Sistemde kullanılacak aktif ödeme yöntemini (Gateway) seçin. Tüm yeni siparişler bu altyapı üzerinden çekilecektir.
+                  </p>
+                  <form onSubmit={handleSavePaymentSetting}>
+                    <div className="input-group">
+                      <label>Aktif Ödeme Yöntemi</label>
+                      <select className="input" value={paymentSetting} onChange={e => setPaymentSetting(e.target.value)} required>
+                        <option value="iyzicoPaymentStrategy">Iyzico (Türkiye - Kredi Kartı)</option>
+                        <option value="stripePaymentStrategy" disabled>Stripe (Global) - Yakında</option>
+                      </select>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Değişiklikleri Kaydet</button>
+                  </form>
                 </div>
               </div>
             </div>
