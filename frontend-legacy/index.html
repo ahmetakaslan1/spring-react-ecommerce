@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelecek E-Ticaret</title>
+    <!-- Modern Fontlar ve İkonlar -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <h1 class="logo">GELECEK <span>STORE</span></h1>
+            <div class="nav-actions" id="nav-actions">
+                <!-- Burası JavaScript ile giriş durumuna göre güncellenecek -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ana İçerik -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero glass-panel">
+            <h2>Yeni Nesil Alışveriş Deneyimi</h2>
+            <p>Sonsuz ürün havuzumuzda sörf yapın. Sayfalama altyapımızın hızıyla tanışın!</p>
+        </section>
+
+        <!-- Ürünler -->
+        <section class="products-section">
+            <div class="section-header">
+                <h3>Trend Ürünler</h3>
+                <span id="total-elements" class="badge">0 Ürün</span>
+            </div>
+            
+            <!-- Kategori Filtreleri -->
+            <div id="category-filters" class="category-filters glass" style="display: flex; gap: 10px; overflow-x: auto; padding: 15px; margin-bottom: 20px; border-radius: 12px;">
+                <!-- JS ile Doldurulacak -->
+            </div>
+            
+            <!-- Ürünlerin dizileceği ızgara -->
+            <div id="product-grid" class="product-grid">
+                <!-- Ürün Kartları JS ile Gelecek -->
+            </div>
+
+            <!-- Sayfalama (Pagination) Kontrolleri -->
+            <div class="pagination glass" id="pagination-controls">
+                <button id="prev-btn" class="btn btn-outline" disabled>Önceki Sayfa</button>
+                <span id="page-info">Sayfa 1 / 1</span>
+                <button id="next-btn" class="btn btn-outline">Sonraki Sayfa</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modallar -->
+
+    <!-- Giriş Yap Modal -->
+    <div id="login-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <button class="close-btn" onclick="closeModal('login-modal')">×</button>
+            <h2>Giriş Yap</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label>E-posta Adresi</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="input-group">
+                    <label>Şifre</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+                <p class="switch-modal">Hesabın yok mu? <a href="#" onclick="switchModal('login-modal', 'register-modal')">Kayıt Ol</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ürün Detay Modal -->
+    <div id="product-detail-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel" style="max-width: 800px; width: 90%; display: flex; flex-direction: row; gap: 20px; padding: 20px;">
+            <button class="close-btn" onclick="closeModal('product-detail-modal')" style="position: absolute; right: 20px; top: 20px; z-index: 10;">×</button>
+            
+            <!-- Sol: Resim -->
+            <div style="flex: 1; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; min-height: 300px;" id="detail-image-container">
+                <!-- Resim Gelecek -->
+            </div>
+            
+            <!-- Sağ: Bilgiler -->
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                <span id="detail-category" class="badge" style="align-self: flex-start; margin-bottom: 10px; background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); color: var(--primary);">Kategori</span>
+                <h2 id="detail-title" style="margin: 0 0 15px 0; font-size: 2rem; color: var(--text-color);">Ürün Adı</h2>
+                <p id="detail-desc" style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">Açıklama</p>
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                    <div>
+                        <span style="font-size: 0.9rem; color: var(--text-muted); display: block;">Fiyat</span>
+                        <span id="detail-price" style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">0 TL</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 0.9rem; color: var(--text-muted); display: block;">Stok Durumu</span>
+                        <span id="detail-stock" style="font-size: 1.1rem; font-weight: 500; color: #4ade80;">0 Adet Kaldı</span>
+                    </div>
+                </div>
+                
+                <button id="detail-add-btn" class="btn btn-primary" style="padding: 15px; font-size: 1.1rem; border-radius: 8px;"><i class="fas fa-shopping-cart"></i> Sepete Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kayıt Ol Modal -->
+    <div id="register-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <button class="close-btn" onclick="closeModal('register-modal')">×</button>
+            <h2>Kayıt Ol</h2>
+            <form id="register-form">
+                <div class="input-group">
+                    <label>Adınız Soyadınız (Name)</label>
+                    <input type="text" id="register-name" required>
+                </div>
+                <div class="input-group">
+                    <label>E-posta Adresi (Email)</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="input-group">
+                    <label>Şifre</label>
+                    <input type="password" id="register-password" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Kayıt Ol</button>
+                <p class="switch-modal">Zaten hesabın var mı? <a href="#" onclick="switchModal('register-modal', 'login-modal')">Giriş Yap</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profilim Modal -->
+    <div id="profile-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <button class="close-btn" onclick="closeModal('profile-modal')">×</button>
+            <h2>Profilim</h2>
+                <div class="profile-header" style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
+                    <div id="profile-avatar-container" style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 15px; color: #000; box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info" style="text-align: center; color: var(--text-muted);">
+                        <p style="font-size: 1.2rem; color: var(--text-color); font-weight: bold; margin-bottom: 5px;" id="profile-display-name">Yükleniyor...</p>
+                        <p style="margin-bottom: 5px;"><i class="fas fa-envelope"></i> <span id="profile-display-email">Yükleniyor...</span></p>
+                        <p><i class="fas fa-calendar-alt"></i> <span id="profile-display-birthdate">Belirtilmemiş</span> | <i class="fas fa-venus-mars"></i> <span id="profile-display-gender">Belirtilmemiş</span></p>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">Bilgileri Güncelle</h3>
+                <form id="profile-update-form">
+                    <div class="input-group">
+                        <label>Adınız Soyadınız</label>
+                        <input type="text" id="profile-update-name" placeholder="Ad Soyad">
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="input-group" style="flex: 1;">
+                            <label>Doğum Tarihi</label>
+                            <input type="date" id="profile-update-birthdate">
+                        </div>
+                        <div class="input-group" style="flex: 1;">
+                            <label>Cinsiyet</label>
+                            <select id="profile-update-gender" style="width: 100%; padding: 14px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: white; font-family: 'Inter'; outline: none;">
+                                <option value="UNKNOWN">Belirtmek İstemiyorum</option>
+                                <option value="MALE">Erkek</option>
+                                <option value="FEMALE">Kadın</option>
+                            </select>
+                        </div>
+                    </div>
+                <div class="input-group">
+                    <label>Yeni Şifre (İsteğe Bağlı)</label>
+                    <input type="password" id="profile-update-password" placeholder="Değiştirmek istemiyorsanız boş bırakın" minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary w-100" style="margin-bottom: 15px;">Güncelle</button>
+            </form>
+            
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+            
+            <div style="text-align: center;">
+                <button class="btn btn-danger w-100" onclick="deleteMyAccount()">Hesabımı Sil (Geri Alınamaz)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Siparişlerim Modal -->
+    <div id="orders-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel modal-lg" style="max-width: 800px; padding: 40px;">
+            <button class="close-btn" onclick="closeModal('orders-modal')">×</button>
+            <h2 style="font-size: 2rem; margin-bottom: 30px;"><i class="fas fa-box-open" style="color: var(--primary);"></i> Sipariş Geçmişim</h2>
+            
+            <div id="orders-list" class="orders-list" style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- Siparişler JS ile Gelecek -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sepetim Modal -->
+    <div id="cart-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel modal-lg">
+            <button class="close-btn" onclick="closeModal('cart-modal')">×</button>
+            <h2>Sepetim</h2>
+            <div id="cart-list" class="orders-list" style="margin-bottom: 20px;">
+                <!-- Sepet Öğeleri JS ile Gelecek -->
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <h3>Toplam: <span id="cart-total-price">0</span> TL</h3>
+                <button class="btn btn-primary" onclick="openAddressModal()">Teslimat Bilgilerini Gir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adres Bilgileri Modal -->
+    <div id="address-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <button class="close-btn" onclick="closeModal('address-modal')">×</button>
+            <h2><i class="fas fa-map-marker-alt" style="color: var(--primary-color);"></i> Teslimat & Fatura Bilgileri</h2>
+            <form id="address-form" onsubmit="submitAddressForm(event)" class="form-group" style="margin-top: 20px;">
+                <input type="text" id="address-contact-name" placeholder="Ad Soyad" required class="input-field" style="width: 100%; margin-bottom: 10px;">
+                <input type="tel" id="address-phone" placeholder="Telefon Numarası (05XX...)" required class="input-field" style="width: 100%; margin-bottom: 10px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" id="address-city" placeholder="Şehir" required class="input-field" style="width: 50%;">
+                    <input type="text" id="address-district" placeholder="İlçe" required class="input-field" style="width: 50%;">
+                </div>
+                <textarea id="address-full" placeholder="Tam Adres (Mahalle, Sokak, No...)" required class="input-field" rows="3" style="width: 100%; margin-bottom: 10px;"></textarea>
+                
+                <!-- İndirim Kuponu -->
+                <div style="margin-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: #a3a3a3; font-size: 0.9em;"><i class="fas fa-ticket-alt"></i> İndirim Kuponu Kodu (Opsiyonel)</label>
+                    <input type="text" id="coupon-code" placeholder="Örn: YAZ2024" class="input-field" style="width: 100%; text-transform: uppercase;">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Ödeme Ekranına Git <i class="fas fa-arrow-right"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ödeme Modal -->
+    <div id="payment-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel" style="width: 100%; max-width: 600px; padding: 0;">
+            <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h2 style="margin: 0;"><i class="fas fa-lock" style="color: #4ade80;"></i> Güvenli Ödeme</h2>
+                <button class="close-btn" onclick="closeModal('payment-modal')" style="position: static; font-size: 1.5rem;">×</button>
+            </div>
+            
+            <div id="iyzipay-checkout-form" class="responsive" style="width: 100%; min-height: 500px; background: white; border-radius: 0 0 10px 10px; overflow: hidden;">
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px; color: black;">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i> <span style="margin-left: 10px;">Iyzico Güvenli Ödeme Ekranı Yükleniyor...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Paneli Modal (İptal Edildi - admin.html'e Taşındı) -->
+
+    <!-- Toast Bildirimleri (Sağ alt köşe) -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
