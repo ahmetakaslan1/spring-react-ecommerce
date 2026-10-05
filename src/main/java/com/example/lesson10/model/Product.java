@@ -8,6 +8,7 @@ import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Table(name = "products")
+// Ürünü silerken  araya güncelleme girmesin diye kilit mekanizmasına (version) tekrar kullandım.
 @SQLDelete(sql = "UPDATE products SET is_deleted = true WHERE id = ? AND version = ?")
 @SQLRestriction("is_deleted = false")
 public class Product {
@@ -23,7 +24,9 @@ public class Product {
     
     @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean isDeleted = false;
-    
+
+   // Veritabanı seviyesinde çift satışı engellemek için kritik alan. 
+   // (Optimistic Lock) 
     @Version
     private Long version;
     
